@@ -12,7 +12,7 @@ pipeline{
                                                                     python3-flask \
                                                                     pipenv  \
                                                                     pylint  \
-                                                                    python-poetry
+                                                                    python3-poetry
                     pipx install pyinstaller
                     '''
                     }
