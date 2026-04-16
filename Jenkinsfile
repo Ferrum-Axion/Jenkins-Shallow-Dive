@@ -1,5 +1,5 @@
 pipeline{
-    agent {label 'workers'}
+    agent {label 'deb'}
         stages {
             stage('Pre-Build') {
                 steps {
