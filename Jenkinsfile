@@ -8,7 +8,7 @@ pipeline{
                                                                     curl \
                                                                     python3 \
                                                                     python3-pip \
-                                                                    pipx
+                                                                    pipx \
                                                                     python3-flask \
                                                                     pipenv  \
                                                                     pylint  \
