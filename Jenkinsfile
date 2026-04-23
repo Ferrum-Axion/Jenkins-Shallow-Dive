@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent { 
+        label 'worker1 || worker2' 
+    }
 
     stages {
         stage('Example Build') {
