@@ -8,7 +8,7 @@ pipeline{
                 echo 'Checking pre-requisites'
                 sleep 2
                 sh'''
-                    source /etc/os-release
+                    . /etc/os-release
                     if [ $ID == 'debian' ];then
                         sudo apt-get update
                         sudo apt-get install -y wget curl python3 python3-pip python3-pep8 python3-flask pipenv pylint pipx
