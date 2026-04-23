@@ -43,12 +43,17 @@ pipeline{
             steps{
                 sh 'tar -czvf app.tar.gz dist/app'
                 echo 'Archiving the artifact'
-                archiveArtifacts artifacts: 'app.tar.gz', followSymlinks: false
             }
         }
         post {
-            success { archiveArtifacts artifacts: 'app.tar.gz', followSymlinks: false }
-            unsuccess { cleanWs() }
+            success { 
+                echo "Build successful! Archiving artifact..."
+                archiveArtifacts artifacts: 'app.tar.gz', followSymlinks: false 
+                }
+            unsuccessful {
+                echo "Build failed! Cleaning workspace..."
+                cleanWs() 
+                }
         }
     }
 }
