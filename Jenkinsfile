@@ -1,5 +1,5 @@
 pipeline{
-    agent deb
+    agent { label 'deb' }
     stages{
         stage('Prebuild'){
             steps{
