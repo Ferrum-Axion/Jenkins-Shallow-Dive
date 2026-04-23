@@ -45,15 +45,15 @@ pipeline{
                 echo 'Archiving the artifact'
             }
         }
-        post {
-            success { 
+    }
+    post {
+        success { 
                 echo "Build successful! Archiving artifact..."
                 archiveArtifacts artifacts: 'app.tar.gz', followSymlinks: false 
-                }
-            unsuccessful {
+            }
+        unsuccessful {
                 echo "Build failed! Cleaning workspace..."
                 cleanWs() 
-                }
+            }
         }
-    }
 }
