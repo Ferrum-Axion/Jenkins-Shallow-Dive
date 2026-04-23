@@ -3,7 +3,9 @@ pipeline{
     parameters{
         string(name: 'sleep_time', defaultValue: '2', description:'time to sleep')
         choice(name: 'Agent_name', choices: ['deb', 'win'], description:'Pick a agent to run on ')
-    }
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description:'Branch to build')
+		booleanParam(name: 'SKIP_DEPLOY', defaultvalue: false, description: 'Skip the deploy stage')
+	}
     agent { label "${params.Agent_name}"}
 
     stages{
@@ -24,57 +26,44 @@ pipeline{
                 '''
             }
         }
-        stage('Linter'){
-            steps{
-                echo 'Static code analysis check'
-                sleep "${params.sleep_time}"
-                sh '''
-	
-                    pylint --disable=missing-docstring,invalid-name app.py 
-                '''
-	    } //error with artifact
+
+		stage('Info') {
+			steps {
+				echo "Build ID : ${env.BUILD_ID}"
+				echo "Build URL : ${env.BUILD_URL}"
+				echo "Job Name : ${env.JOB_NAME}"
+				echo "Branch : ${params.BRANCH_NAME}"
+		}
 	}
-        stage('Build'){
-            steps{
-                echo 'Building the Project'
-                sleep "${params.sleep_time}"
-                sh '''
-                    python3 app.py &
-		            chmod 777 -R  /home/jenkins/.local/bin/pyinstaller
-		            /home/jenkins/.local/bin/pyinstaller -y  app.py
-                '''
-            }// error with pyinstaller
-        }
-        stage('Test'){
-            steps{
-                echo 'Testing'
-                sleep "${params.sleep_time}"
-                sh'''
-                    if curl localhost:8080 &> /dev/null;then
-                        echo 'post test: success'
-                    else
-                        echo 'post test: fail'
-                        exit 1
-                    fi
-                    if curl localhost:8080/jenkins &> /dev/null;then
-                        echo 'post test with variable: success'
-                    else
-                        echo 'post test with variable: fail'
-                        exit 1
-                    fi
-                '''
-            }
-       } 
-}
- 	   post {
-        	unsuccessful{
-            	cleanWs cleanWhenSuccess: false
-       		 	}
-        	success{
-            		archiveArtifacts artifacts: 'dist/', followSymlinks: false, onlyIfSuccessful: true      
-        		}
-    		}
+		
+		stage('Validate') {
+			failFast true
+				parallel {
+					stage('Lint') {
+						steps {
+							echo 'Running linter...'
+							sh 'echo lint-output > lint.log'
+						}
+					}
+					stage('Test') {
+						steps {
+							echo 'Running tests...'
+							sh 'echo test-output > test.log'
+						}
+					}
+			}
+		}
 
-    	}
-
+		post {
+			always {
+				echo 'Pipeline finished.'
+			}
+			success {
+				archiveArtifacts artifacts: '*.log', allowEmptyArchive: true
+			}
+			failure {
+				cleanWs()
+			}
+		}
+	}
 
