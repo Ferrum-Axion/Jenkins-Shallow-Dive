@@ -59,7 +59,8 @@ pipeline{
                     fi
                 '''
             }
-        
+       } 
+}
  	   post {
         	unsuccessful{
             	cleanWs cleanWhenSuccess: false
