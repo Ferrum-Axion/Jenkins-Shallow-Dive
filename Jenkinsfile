@@ -54,6 +54,16 @@ pipeline{
 			}
 		}
 
+		stage('Deploy') {
+			when {
+				expression { return !params.SKIP_DEPLOY }
+			}
+			steps {
+				echo "Deploying branch: ${params.BRANCH_NAME}"
+				}
+			}
+		}
+	
 		post {
 			always {
 				echo 'Pipeline finished.'
