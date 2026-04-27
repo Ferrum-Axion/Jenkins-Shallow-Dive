@@ -3,8 +3,8 @@ pipeline{
     parameters{
         string(name: 'sleep_time', defaultValue: '2', description:'time to sleep')
         choice(name: 'Agent_name', choices: ['deb', 'win'], description:'Pick a agent to run on ')
-        string(name: 'BRANCH_NAME', DefaultValue: 'main', description:'Branch to build')
-		booleanParam(name: 'SKIP_DEPLOY', defaultvalue: false, description: 'Skip the deploy stage')
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description:'Branch to build')
+		booleanParam(name: 'SKIP_DEPLOY', defaultValue: false, description: 'Skip the deploy stage')
 	}
     agent { label "${params.Agent_name}"}
 
