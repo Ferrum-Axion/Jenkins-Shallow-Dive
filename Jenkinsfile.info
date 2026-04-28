@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage('Info') {
+            steps {
+                echo "Branch: ${env.BRANCH_NAME}"
+                echo "Build ID: ${env.BUILD_ID}"
+                echo "URL: ${env.BUILD_URL}"
+            }
+        }
+    }
+    post {
+        failure {
+            echo 'Build failed, cleaning workspace...'
+            deleteDir()
+        }
+        success {
+            echo 'Build success! zipping artifacts...'
+            sh '''
+                if [ -d dist ]; then
+                    tar -czf converted-app.tar.gz dist/
+                else
+                    echo "dist/ not found; skipping package creation"
+                fi
+            '''
+            archiveArtifacts artifacts: 'converted-app.tar.gz', onlyIfSuccessful: true, allowEmptyArchive: true
+        }
+    }
+}
