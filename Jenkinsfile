@@ -12,6 +12,7 @@ pipeline{
             steps{
         
                 echo 'Checking pre-requisites'
+                echo 'TESTING WHATEVER'
                 sleep "${params.sleep_time}"
                 sh'''
                     . /etc/os-release
