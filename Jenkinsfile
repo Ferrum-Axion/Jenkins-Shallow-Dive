@@ -1,5 +1,5 @@
 pipeline{
-    agent { label 'worker' }
+    agent { label 'docker-python-agent' }
     stages{
         stage('Branch_Info'){
             steps{
