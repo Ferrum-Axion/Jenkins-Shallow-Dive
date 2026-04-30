@@ -14,6 +14,7 @@ pipeline{
                 echo 'Checking pre-requisites'
                 echo 'TESTING WHATEVER'
                 echo 'TESTING WHATEVER'
+                echo 'TESTING WHATEVER'
                 sleep "${params.sleep_time}"
                 sh'''
                     . /etc/os-release
